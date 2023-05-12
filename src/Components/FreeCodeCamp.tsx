@@ -24,6 +24,7 @@ const FreeCodeCamp = () => {
     <Container sx={{ py: 6 }} maxWidth="md">
       {!currentTitle &&
         TITLES.map((title) => (
+          <>
           <TitleItem
             url={title.url}
             label={title.label}
@@ -31,12 +32,8 @@ const FreeCodeCamp = () => {
             key={title.url}
             handleClick={() => handleTitleClick(title)}
           />
-        ))}
-
-      {/* RENDER TITLE TOPICS */}
-      {currentTitle && !currentLesson && (
         <Box>
-          <Button
+          {/* <Button
             sx={{
               textTransform: 'capitalize',
               fontWeight: '500',
@@ -46,16 +43,16 @@ const FreeCodeCamp = () => {
             onClick={() => setCurrentTitle(undefined)}
           >
             Back
-          </Button>
+          </Button> */}
           <Box textAlign="center" mb={3}>
-            <Typography mb={3} fontWeight={700} fontSize="32px">
-              {/* @ts-ignore */}
-              {currentTitle.label}
-            </Typography>
+            {/* <Typography mb={3} fontWeight={700} fontSize="32px">
+              {/* @ts-ignore * /}
+              {title.label}
+            </Typography> */}
             {/* @ts-ignore */}
-            <Typography mb={2}>{currentTitle.bigIcon}</Typography>
-            <Box fontWeight={400} fontSize="18px" textAlign="start" mb={2}>
-              {/* @ts-ignore */}
+            {/* <Typography mb={2}>{currentTitle.bigIcon}</Typography> */}
+            {/* <Box fontWeight={400} fontSize="18px" textAlign="start" mb={2}>
+              {/* @ts-ignore * /}
               {currentTitle.description.split('\n').map((line) => (
                 <Typography mb={1}>{line}</Typography>
               ))}
@@ -65,16 +62,22 @@ const FreeCodeCamp = () => {
               className="heading-1"
             >
               Courses
-            </h2>
+            </h2> */}
           </Box>
           {/* @ts-ignore */}
-          {currentTitle.topics.map((topic) => (
+          {title.topics.map((topic) => (
             <Box key={topic.dashedName}>
               <LessonsWrapper topic={topic} handleClick={handleCurrentLesson} />
             </Box>
           ))}
         </Box>
-      )}
+          </>
+        ))}
+
+      {/* RENDER TITLE TOPICS */}
+      {/* {currentTitle && !currentLesson && (
+        
+      )} */}
 
       {currentLesson && (
         <LessonItem
