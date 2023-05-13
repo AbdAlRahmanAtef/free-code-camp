@@ -21,60 +21,20 @@ const FreeCodeCamp = () => {
   console.log(currentTitle);
 
   return (
-    <Container sx={{ py: 6 }} maxWidth="md">
-      {!currentTitle &&
-        TITLES.map((title) => (
-          <TitleItem
-            url={title.url}
-            label={title.label}
-            icon={title.icon}
-            key={title.url}
-            handleClick={() => handleTitleClick(title)}
-          />
-        ))}
+    <Container sx={{ py: 6 }} style={{maxWidth: '1200px'}}>
+      {!currentLesson && TITLES.map(
+        Title(
+          handleTitleClick,
+          currentTitle,
+          setCurrentTitle,
+          handleCurrentLesson,
+        ),
+      )}
 
       {/* RENDER TITLE TOPICS */}
-      {currentTitle && !currentLesson && (
-        <Box>
-          <Button
-            sx={{
-              textTransform: 'capitalize',
-              fontWeight: '500',
-              fontSize: '22px',
-            }}
-            startIcon={<KeyboardBackspaceIcon fontSize="large" />}
-            onClick={() => setCurrentTitle(undefined)}
-          >
-            Back
-          </Button>
-          <Box textAlign="center" mb={3}>
-            <Typography mb={3} fontWeight={700} fontSize="32px">
-              {/* @ts-ignore */}
-              {currentTitle.label}
-            </Typography>
-            {/* @ts-ignore */}
-            <Typography mb={2}>{currentTitle.bigIcon}</Typography>
-            <Box fontWeight={400} fontSize="18px" textAlign="start" mb={2}>
-              {/* @ts-ignore */}
-              {currentTitle.description.split('\n').map((line) => (
-                <Typography mb={1}>{line}</Typography>
-              ))}
-            </Box>
-            <h2
-              style={{ marginTop: '50px', marginBottom: '40px' }}
-              className="heading-1"
-            >
-              Courses
-            </h2>
-          </Box>
-          {/* @ts-ignore */}
-          {currentTitle.topics.map((topic) => (
-            <Box key={topic.dashedName}>
-              <LessonsWrapper topic={topic} handleClick={handleCurrentLesson} />
-            </Box>
-          ))}
-        </Box>
-      )}
+      {/* {currentTitle && !currentLesson && (
+        
+      )} */}
 
       {currentLesson && (
         <LessonItem
@@ -87,3 +47,56 @@ const FreeCodeCamp = () => {
 };
 
 export default FreeCodeCamp;
+
+function Title(
+  handleTitleClick: (title: any) => void,
+  currentTitle: undefined,
+  setCurrentTitle: React.Dispatch<(prevState: undefined) => undefined>,
+  handleCurrentLesson: (url: string) => void,
+) {
+  return (title) => {
+    return (
+      <>
+        <TitleItem
+          url={title.url}
+          label={title.label}
+          icon={title.icon}
+          key={title.url}
+          handleClick={() => handleTitleClick(title)}
+        />
+        <Box>
+          {currentTitle && (
+            <Button
+              sx={{
+                textTransform: 'capitalize',
+                fontWeight: '500',
+                fontSize: '22px',
+              }}
+              startIcon={<KeyboardBackspaceIcon fontSize="large" />}
+              onClick={() => setCurrentTitle(undefined)}
+            >
+              Back
+            </Button>
+          )}
+          <Box textAlign="center" mb={3}></Box>
+          {/* @ts-ignore */}
+          {<Topics title={title} handleCurrentLesson={handleCurrentLesson} />}
+        </Box>
+      </>
+    );
+  };
+}
+
+function Topics({ title, handleCurrentLesson }) {
+  return (
+    <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
+      {title.topics.map((topic) => (
+        <LessonsWrapper
+          key={topic.dashedName}
+          topic={topic}
+          handleClick={handleCurrentLesson}
+        />
+      ))}
+    </div>
+  );
+}

@@ -13,12 +13,28 @@ const LessonsWrapper = ({ topic, handleClick }) => {
         borderRadius: '8px',
         mb: 3,
       }}
+      style={{
+        maxWidth: '300px',
+        fontSize: '8px',
+        marginLeft: '10px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-evenly',
+        alignItems: 'stretch',
+      }}
     >
       <h2 className="heading-1">{topic.name}</h2>
       <Box sx={{ borderBottom: '2px solid #eee', pb: 2, mb: 2 }}>
         {' '}
         {topic?.description?.split('\n').map((line) => (
-          <Typography mb={1}>{line}</Typography>
+          <Typography
+            mb={1}
+            style={{
+              fontSize: '13px',
+            }}
+          >
+            {line}
+          </Typography>
         ))}
       </Box>
       <Typography
