@@ -1,102 +1,119 @@
-import React, { useState } from 'react';
-import { Box, Button, Container, Typography } from '@mui/material';
-import TitleItem from './TitleItem';
+import React, { useEffect, useState } from 'react';
+import { Box, Collapse, Container, Typography } from '@mui/material';
 import { TITLES } from '../data/titles';
 import LessonItem from './LessonItem';
 import LessonsWrapper from './LessonsWrapper';
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import CoursesWrapper from './CourseWrapper';
+import EnrolledCourses from './EnrolledCourses';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+
+const LOCALSTORAGE_KEY_Lessons = 'LOCALSTORAGE_COMPLETED_COURSES';
+const LOCALSTORAGE_KEY_COURSES = 'LOCALSTORAGE_KEY_COURSES';
 
 const FreeCodeCamp = () => {
-  const [currentTitle, setCurrentTitle] = useState();
+  const [currentCourse, setCurrentCourse] = useState();
   const [currentLesson, setCurrentLesson] = useState('');
+  const [expanded, setExpanded] = useState(false);
+  const [enrolledCourses, setEnrolledCourses] = useState(
+    JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY_COURSES)),
+  );
+  const [completedLessons, setCompletedLessons] = useState(
+    JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY_Lessons)),
+  );
 
-  const handleTitleClick = (title) => {
-    setCurrentTitle(title);
-  };
+  useEffect(() => {
+    localStorage.setItem(
+      LOCALSTORAGE_KEY_Lessons,
+      JSON.stringify(completedLessons),
+    );
 
-  const handleCurrentLesson = (url: string) => {
-    setCurrentLesson(url);
-  };
+    const storedLessons =
+      JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY_Lessons)) || [];
+    const storedCourses =
+      JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY_COURSES)) || [];
 
-  console.log(currentTitle);
+    setEnrolledCourses(storedCourses);
+    setCompletedLessons(storedLessons);
+  }, [localStorage]);
 
   return (
-    <Container sx={{ py: 6 }} style={{maxWidth: '1200px'}}>
-      {!currentLesson && TITLES.map(
-        Title(
-          handleTitleClick,
-          currentTitle,
-          setCurrentTitle,
-          handleCurrentLesson,
-        ),
-      )}
+    <Box sx={{ py: { xs: 3, md: 6 }, background: { xs: '#fff', md: '#eee' } }}>
+      {' '}
+      <Container maxWidth="sm">
+        {enrolledCourses?.length > 0 && !currentCourse && (
+          <Box>
+            <Typography
+              sx={{
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                fontSize: { xs: '24px', md: '34px' },
+                fontWeight: '700',
+              }}
+              onClick={() => setExpanded((prev) => !prev)}
+            >
+              <ArrowRightIcon
+                fontSize="large"
+                sx={{
+                  transform: `rotate(${expanded ? '90deg' : '0deg'})`,
+                  transition: '.3s',
+                }}
+              />{' '}
+              Enrolled Courses <small>({enrolledCourses.length})</small>
+            </Typography>
+            <Collapse in={expanded}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gap: 3,
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                }}
+              >
+                {enrolledCourses?.map((course) => (
+                  <EnrolledCourses
+                    handleOpen={setCurrentCourse}
+                    topic={course}
+                    enrolledCourses={enrolledCourses}
+                    setEnrolledCourses={setEnrolledCourses}
+                  />
+                ))}
+              </Box>
+            </Collapse>
+          </Box>
+        )}
 
-      {/* RENDER TITLE TOPICS */}
-      {/* {currentTitle && !currentLesson && (
-        
-      )} */}
+        {!currentLesson &&
+          !currentCourse &&
+          TITLES.map((topic) => (
+            <CoursesWrapper
+              key={topic.url}
+              topic={topic}
+              enrolledCourses={enrolledCourses}
+              setEnrolledCourses={setEnrolledCourses}
+              handleClick={setCurrentCourse}
+            />
+          ))}
 
-      {currentLesson && (
-        <LessonItem
-          url={currentLesson}
-          handleClick={() => setCurrentLesson('')}
-        />
-      )}
-    </Container>
+        {currentCourse && !currentLesson && (
+          <LessonsWrapper
+            completedLessons={completedLessons}
+            topic={currentCourse}
+            handleClick={setCurrentLesson}
+            handleBack={() => setCurrentCourse(undefined)}
+          />
+        )}
+
+        {currentLesson && (
+          <LessonItem
+            completedLessons={completedLessons}
+            setCompletedLessons={setCompletedLessons}
+            url={currentLesson}
+            handleClick={() => setCurrentLesson('')}
+          />
+        )}
+      </Container>
+    </Box>
   );
 };
 
 export default FreeCodeCamp;
-
-function Title(
-  handleTitleClick: (title: any) => void,
-  currentTitle: undefined,
-  setCurrentTitle: React.Dispatch<(prevState: undefined) => undefined>,
-  handleCurrentLesson: (url: string) => void,
-) {
-  return (title) => {
-    return (
-      <>
-        <TitleItem
-          url={title.url}
-          label={title.label}
-          icon={title.icon}
-          key={title.url}
-          handleClick={() => handleTitleClick(title)}
-        />
-        <Box>
-          {currentTitle && (
-            <Button
-              sx={{
-                textTransform: 'capitalize',
-                fontWeight: '500',
-                fontSize: '22px',
-              }}
-              startIcon={<KeyboardBackspaceIcon fontSize="large" />}
-              onClick={() => setCurrentTitle(undefined)}
-            >
-              Back
-            </Button>
-          )}
-          <Box textAlign="center" mb={3}></Box>
-          {/* @ts-ignore */}
-          {<Topics title={title} handleCurrentLesson={handleCurrentLesson} />}
-        </Box>
-      </>
-    );
-  };
-}
-
-function Topics({ title, handleCurrentLesson }) {
-  return (
-    <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
-      {title.topics.map((topic) => (
-        <LessonsWrapper
-          key={topic.dashedName}
-          topic={topic}
-          handleClick={handleCurrentLesson}
-        />
-      ))}
-    </div>
-  );
-}

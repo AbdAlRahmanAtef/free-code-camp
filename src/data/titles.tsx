@@ -1,5 +1,5 @@
 const IconColor = '#0a0a23';
-const IconSize = '42';
+const IconSize = '60';
 
 const directoryToSuperblock = {
   '00-certifications': 'certifications', // treating certifications as a superblock for simplicity
@@ -21,44 +21,43 @@ const directoryToSuperblock = {
     '2022/javascript-algorithms-and-data-structures',
   '16-the-odin-project': 'the-odin-project',
   '17-college-algebra-with-python': 'college-algebra-with-python',
-  '18-project-euler': 'project-euler'
+  '18-project-euler': 'project-euler',
 };
 
+interface CompletedLesson {
+  lessonId: string;
+  code: string;
+}
 
-  interface CompletedLesson {
-    lessonId: string;
-    code: string;
-  }
+interface Course {
+  name: string;
+  completedLessons: CompletedLesson[];
+}
 
-  interface Course {
-    name: string;
-    completedLessons: CompletedLesson[];
-  }
+interface UserData {
+  courses: Course[];
+}
 
-  interface UserData {
-    courses: Course[];
-  }
-
-  const userData: UserData = {
-    courses: [
-      {
-        name: 'Sass',
-        completedLessons: [
-          {
-            lessonId: '587d7dbd367417b2b2512bb4',
-            code: '/* Code for lesson 1 */',
-          },
-          {
-            lessonId: '587d7dbd367417b2b2512bb5',
-            code: '/* Code for lesson 2 */',
-          },
-          // Add more completed lessons here
-        ],
-      },
-      // Add more courses here
-    ],
-  };
-  /* In this updated structure, the Course object has a completedLessons property, which is an array of CompletedLesson objects. Each CompletedLesson object contains the lessonId of the completed lesson and the code that has been added by the user for that lesson.
+const userData: UserData = {
+  courses: [
+    {
+      name: 'Sass',
+      completedLessons: [
+        {
+          lessonId: '587d7dbd367417b2b2512bb4',
+          code: '/* Code for lesson 1 */',
+        },
+        {
+          lessonId: '587d7dbd367417b2b2512bb5',
+          code: '/* Code for lesson 2 */',
+        },
+        // Add more completed lessons here
+      ],
+    },
+    // Add more courses here
+  ],
+};
+/* In this updated structure, the Course object has a completedLessons property, which is an array of CompletedLesson objects. Each CompletedLesson object contains the lessonId of the completed lesson and the code that has been added by the user for that lesson.
 
   By storing only the completed lessons and their corresponding code, you can reduce the amount of data stored and retrieve the necessary information efficiently.
 
@@ -69,11 +68,11 @@ const directoryToSuperblock = {
   const userDataString = JSON.stringify(userData);
   localStorage.setItem('userData', userDataString); */
 
-  const storedDataString = localStorage.getItem('userData');
-  if (storedDataString) {
-    const storedData: UserData = JSON.parse(storedDataString);
-    // Use the storedData object
-  }
+const storedDataString = localStorage.getItem('userData');
+if (storedDataString) {
+  const storedData: UserData = JSON.parse(storedDataString);
+  // Use the storedData object
+}
 
 /*   Note that you may need to update other parts of your application to handle this simplified data structure. For example, when rendering the course details, you can iterate over the completedLessons array to display the completed lessons and their associated code.
  */

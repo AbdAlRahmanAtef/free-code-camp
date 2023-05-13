@@ -1,19 +1,38 @@
-import { Box, Button } from '@mui/material';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  FormControlLabel,
+  Stack,
+  Typography,
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { marked } from 'marked';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
-const LessonItem = ({ url, handleClick }) => {
+const LessonItem = ({
+  url,
+  handleClick,
+  completedLessons,
+  setCompletedLessons,
+}) => {
   const [html, setHtml] = useState('');
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const LOCALSTORAGE_KEY = 'LOCALSTORAGE_COMPLETED_COURSES';
 
   useEffect(() => {
-    async function readFile() {
+    const readFile = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch(
           `https://raw.githubusercontent.com/freeCodeCamp/freeCodeCamp/main/curriculum/challenges/english/${url}`,
         );
+
         let text = await response.text();
 
         const regex = /---(.*?)---/gs;
@@ -48,11 +67,36 @@ const LessonItem = ({ url, handleClick }) => {
         setHtml(marked.parse(text));
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
-    }
+    };
 
     readFile();
   }, [url]);
+
+  const handleCompleteLesson = () => {
+    const isFound = completedLessons?.find((l) => l === url);
+    if (isFound) {
+      setCompletedLessons(completedLessons.filter((l) => l !== url));
+      localStorage.setItem(
+        LOCALSTORAGE_KEY,
+        JSON.stringify(completedLessons.filter((l) => l !== url)),
+      );
+    } else {
+      setCompletedLessons((prev) => [...prev, url]);
+      localStorage.setItem(
+        LOCALSTORAGE_KEY,
+        JSON.stringify([...completedLessons, url]),
+      );
+    }
+  };
+
+  useEffect(() => {
+    const isFound = completedLessons?.findIndex((l) => l === url);
+
+    setIsCompleted(isFound !== -1 ? true : false);
+  }, [completedLessons, setCompletedLessons]);
 
   return (
     <div className="App">
@@ -61,12 +105,16 @@ const LessonItem = ({ url, handleClick }) => {
           .App {
             text-align: center;
             background-color: #fff;
-            padding: 16px;
             border-radius: 8px;
+            padding: 16px 0;
+            min-height: calc(100vh - 130px);
+            position: relative;
           }
-
+      
           h3 {
-            font-size: 30px;
+            font-size: 34px;
+            margin-top: 0;
+            margin-bottom: 30px;
             text-transform: capitalize;
           }
 
@@ -82,6 +130,7 @@ const LessonItem = ({ url, handleClick }) => {
             padding: 2px 8px;
             border-radius: 4px;
             white-space: pre-wrap;
+            word-wrap: break-word;
           }
 
           .main pre code {
@@ -93,7 +142,6 @@ const LessonItem = ({ url, handleClick }) => {
           .main {
             margin: 20px auto;
             background-color: #fff;
-            padding: 20px;
             text-align: left;
           }
 
@@ -117,25 +165,81 @@ const LessonItem = ({ url, handleClick }) => {
           .main a:hover {
             text-decoration: underline;
           }
+
+          h2 {
+            margin-top: 30px !important;
+            text-transform: capitalize !important;
+          }
+          
+          h1 {
+            text-transform: capitalize !important;
+            margin-top: 30px !important;
+          }
+
+          @media (max-width: 767px) {
+            h3 {
+              font-size: 22px;
+              margin-top: 20px;
+            }
+            
+            h1 {
+              margin-top: 20px;
+              font-size: 18px;
+            }
+            
+            h2 {
+              font-size: 18px;
+            }
+          }
         `}
       </style>
-      <Box textAlign="start">
+      <Container sx={{ textAlign: 'start' }}>
         {' '}
-        <Button
-          sx={{
-            textTransform: 'capitalize',
-            fontWeight: 'bold',
-            fontSize: '22px',
-          }}
-          startIcon={<KeyboardBackspaceIcon fontSize="large" />}
-          onClick={handleClick}
-        >
-          Back
-        </Button>
-      </Box>
-      {/* @ts-ignore */}
-      <h3>{url.split('/')[2].split('.')[0].split('-').join(' ')}</h3>
-      <div className="main" dangerouslySetInnerHTML={{ __html: html }}></div>
+        <Stack direction="row" justifyContent="space-between">
+          {' '}
+          <Button
+            sx={{
+              textTransform: 'capitalize',
+              fontWeight: 'bold',
+              fontSize: '22px',
+              color: '#000',
+              mb: 2,
+            }}
+            startIcon={<KeyboardBackspaceIcon fontSize="large" />}
+            onClick={handleClick}
+          >
+            Back
+          </Button>
+          <FormControlLabel
+            control={
+              <Checkbox checked={isCompleted} onChange={handleCompleteLesson} />
+            }
+            label="Set As Completed"
+          />
+        </Stack>
+        {isLoading ? (
+          <Typography
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              fontSize: '34px',
+              fontWeight: 'bold',
+            }}
+          >
+            Loading...
+          </Typography>
+        ) : (
+          <>
+            <h3>{url.split('/')[2].split('.')[0].split('-').join(' ')}</h3>
+            <div
+              className="main"
+              dangerouslySetInnerHTML={{ __html: html }}
+            ></div>
+          </>
+        )}
+      </Container>
     </div>
   );
 };
