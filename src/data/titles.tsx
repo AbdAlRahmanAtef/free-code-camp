@@ -1,6 +1,83 @@
 const IconColor = '#0a0a23';
 const IconSize = '42';
 
+const directoryToSuperblock = {
+  '00-certifications': 'certifications', // treating certifications as a superblock for simplicity
+  '01-responsive-web-design': 'responsive-web-design',
+  '02-javascript-algorithms-and-data-structures':
+    'javascript-algorithms-and-data-structures',
+  '03-front-end-development-libraries': 'front-end-development-libraries',
+  '04-data-visualization': 'data-visualization',
+  '05-back-end-development-and-apis': 'back-end-development-and-apis',
+  '06-quality-assurance': 'quality-assurance',
+  '07-scientific-computing-with-python': 'scientific-computing-with-python',
+  '08-data-analysis-with-python': 'data-analysis-with-python',
+  '09-information-security': 'information-security',
+  '10-coding-interview-prep': 'coding-interview-prep',
+  '11-machine-learning-with-python': 'machine-learning-with-python',
+  '13-relational-databases': 'relational-database',
+  '14-responsive-web-design-22': '2022/responsive-web-design',
+  '15-javascript-algorithms-and-data-structures-22':
+    '2022/javascript-algorithms-and-data-structures',
+  '16-the-odin-project': 'the-odin-project',
+  '17-college-algebra-with-python': 'college-algebra-with-python',
+  '18-project-euler': 'project-euler'
+};
+
+
+  interface CompletedLesson {
+    lessonId: string;
+    code: string;
+  }
+
+  interface Course {
+    name: string;
+    completedLessons: CompletedLesson[];
+  }
+
+  interface UserData {
+    courses: Course[];
+  }
+
+  const userData: UserData = {
+    courses: [
+      {
+        name: 'Sass',
+        completedLessons: [
+          {
+            lessonId: '587d7dbd367417b2b2512bb4',
+            code: '/* Code for lesson 1 */',
+          },
+          {
+            lessonId: '587d7dbd367417b2b2512bb5',
+            code: '/* Code for lesson 2 */',
+          },
+          // Add more completed lessons here
+        ],
+      },
+      // Add more courses here
+    ],
+  };
+  /* In this updated structure, the Course object has a completedLessons property, which is an array of CompletedLesson objects. Each CompletedLesson object contains the lessonId of the completed lesson and the code that has been added by the user for that lesson.
+
+  By storing only the completed lessons and their corresponding code, you can reduce the amount of data stored and retrieve the necessary information efficiently.
+
+  Remember to update the localStorage saving and retrieving logic accordingly:
+
+  typescript
+  Copy code
+  const userDataString = JSON.stringify(userData);
+  localStorage.setItem('userData', userDataString); */
+
+  const storedDataString = localStorage.getItem('userData');
+  if (storedDataString) {
+    const storedData: UserData = JSON.parse(storedDataString);
+    // Use the storedData object
+  }
+
+/*   Note that you may need to update other parts of your application to handle this simplified data structure. For example, when rendering the course details, you can iterate over the completedLessons array to display the completed lessons and their associated code.
+ */
+
 export const TITLES = [
   {
     url: 'javascript-algorithms-and-data-structures',
