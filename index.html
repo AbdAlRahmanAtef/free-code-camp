@@ -1,0 +1,64 @@
+"
+<h1 id="description">description</h1>
+<p>So far, you have only been able to extract or search a pattern once.</p>
+<pre><code class="language-js"><span class="hljs-keyword">let</span> testStr = <span class="hljs-string">&quot;Repeat, Repeat, Repeat&quot;</span>;
+<span class="hljs-keyword">let</span> ourRegex = <span class="hljs-regexp">/Repeat/</span>;
+testStr.<span class="hljs-title function_">match</span>(ourRegex);
+</code></pre>
+<p>Here <code>match</code> would return <code>[&quot;Repeat&quot;]</code>.</p>
+<p>
+  To search or extract a pattern more than once, you can use the global search
+  flag: <code>g</code>.
+</p>
+<pre><code class="language-js"><span class="hljs-keyword">let</span> repeatRegex = <span class="hljs-regexp">/Repeat/g</span>;
+testStr.<span class="hljs-title function_">match</span>(repeatRegex);
+</code></pre>
+<p>
+  And here <code>match</code> returns the value
+  <code>[&quot;Repeat&quot;, &quot;Repeat&quot;, &quot;Repeat&quot;]</code>
+</p>
+<h1 id="instructions">instructions</h1>
+<p>
+  Using the regex <code>starRegex</code>, find and extract both
+  <code>Twinkle</code> words from the string <code>twinkleStar</code>.
+</p>
+<p>
+  <strong>Note</strong><br />You can have multiple flags on your regex like
+  <code>/search/gi</code>
+</p>
+<h1 id="hints">hints</h1>
+<p>
+  Your regex <code>starRegex</code> should use the global flag <code>g</code>
+</p>
+<pre><code class="language-js"><span class="hljs-title function_">assert</span>(starRegex.<span class="hljs-property">flags</span>.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/g/</span>).<span class="hljs-property">length</span> == <span class="hljs-number">1</span>);
+</code></pre>
+<p>
+  Your regex <code>starRegex</code> should use the case insensitive flag
+  <code>i</code>
+</p>
+<pre><code class="language-js"><span class="hljs-title function_">assert</span>(starRegex.<span class="hljs-property">flags</span>.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/i/</span>).<span class="hljs-property">length</span> == <span class="hljs-number">1</span>);
+</code></pre>
+<p>Your match should match both occurrences of the word <code>Twinkle</code></p>
+<pre><code class="language-js"><span class="hljs-title function_">assert</span>(
+  result.<span class="hljs-title function_">sort</span>().<span class="hljs-title function_">join</span>() ==
+    twinkleStar
+      .<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/twinkle/gi</span>)
+      .<span class="hljs-title function_">sort</span>()
+      .<span class="hljs-title function_">join</span>()
+);
+</code></pre>
+<p>Your match <code>result</code> should have two elements in it.</p>
+<pre><code class="language-js"><span class="hljs-title function_">assert</span>(result.<span class="hljs-property">length</span> == <span class="hljs-number">2</span>);
+</code></pre>
+<h1 id="seed">seed</h1>
+<h2 id="seed-contents">seed-contents</h2>
+<pre><code class="language-js"><span class="hljs-keyword">let</span> twinkleStar = <span class="hljs-string">&quot;Twinkle, twinkle, little star&quot;</span>;
+<span class="hljs-keyword">let</span> starRegex = <span class="hljs-regexp">/change/</span>; <span class="hljs-comment">// Change this line</span>
+<span class="hljs-keyword">let</span> result = twinkleStar; <span class="hljs-comment">// Change this line</span>
+</code></pre>
+<h1 id="solutions">solutions</h1>
+<pre><code class="language-js"><span class="hljs-keyword">let</span> twinkleStar = <span class="hljs-string">&quot;Twinkle, twinkle, little star&quot;</span>;
+<span class="hljs-keyword">let</span> starRegex = <span class="hljs-regexp">/twinkle/gi</span>;
+<span class="hljs-keyword">let</span> result = twinkleStar.<span class="hljs-title function_">match</span>(starRegex);
+</code></pre>
+"

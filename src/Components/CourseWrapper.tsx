@@ -31,7 +31,7 @@ const CoursesWrapper = ({
           display: 'flex',
           alignItems: 'start',
           gap: 1,
-          padding: '16px 16px',
+          padding: '16px 0',
           mb: 2,
         }}
       >
