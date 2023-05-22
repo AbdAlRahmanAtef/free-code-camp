@@ -237,6 +237,33 @@ const LessonItem = ({
               className="main"
               dangerouslySetInnerHTML={{ __html: html }}
             ></div>
+            <Stack direction="row" gap={2} justifyContent="space-between">
+              <Button
+                startIcon={
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="35"
+                    height="35"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="black"
+                      d="M7 6c.55 0 1 .45 1 1v10c0 .55-.45 1-1 1s-1-.45-1-1V7c0-.55.45-1 1-1zm3.66 6.82l5.77 4.07c.66.47 1.58-.01 1.58-.82V7.93c0-.81-.91-1.28-1.58-.82l-5.77 4.07a1 1 0 0 0 0 1.64z"
+                    ></path>
+                  </svg>
+                }
+
+                sx={{
+                  textTransform: 'capitalize',
+                  fontWeight: 'bold',
+                  fontSize: '22px',
+                  color: '#000',
+                  mb: 2,
+                }}
+              >
+                Previous lesson
+              </Button>
+            </Stack>
           </>
         )}
       </Container>
